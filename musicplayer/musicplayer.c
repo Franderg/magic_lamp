@@ -1,10 +1,11 @@
+
+#include <string.h>
 #include <ao/ao.h>
 #include <mpg123.h>
-#include <string.h>
 
 #define BITS 8
 
-//se inician las variables
+//initialize variables
 mpg123_handle *mh;
 unsigned char *buffer;
 size_t buffer_size, done;
@@ -13,10 +14,11 @@ ao_device *dev;
 ao_sample_format format;
 long rate;
 
+
 void stop() {
   FILE *in = popen("echo $(ps -a | grep musicplayer) | tr ':' ' '","r");
-  char func[6];
-  fgets(func, 6, in);
+  char func[5];
+  fgets(func, 5, in);
   pclose(in);
   char* salida = "kill ";
   char dest[10];
@@ -25,7 +27,7 @@ void stop() {
   system(dest);
 }
 
-void play_song(char *song){
+void play(char *song){
 
   /* open the file and get the decoding format */
   mpg123_open(mh, song);
@@ -53,11 +55,6 @@ void play_song(char *song){
   // stop();
 }
 
-void play(){
-  //random select song
-  play_song("random");
-}
-
 int main(int argc, char *argv[]){
 
   /* initializations */
@@ -69,13 +66,8 @@ int main(int argc, char *argv[]){
   buffer = (unsigned char*) malloc(buffer_size * sizeof(unsigned char));
 
   if(argc < 2 || argc > 2){
-    printf("Error, debe indicar un argumento\n");
+    printf("Error, debe indicar bien los argumentos\n");
     exit(0);
-  }
-
-  if (strcmp(argv[1], "play") == 0) {
-    play(argv[1]);
-    return(0);
   }
 
   if (strcmp(argv[1], "stop") == 0) {
@@ -83,18 +75,8 @@ int main(int argc, char *argv[]){
     return(0);
   }
 
-  if (strcmp(argv[1], "light") == 0) {
-    printf("enciende luces\n");
-    return(0);
-  }
-
-  if (strcmp(argv[1], "dark") == 0) {
-    printf("apaga luces\n");
-    return(0);
-  }
-
   else{
-    play_song(argv[1]);
+    play(argv[1]);
   }
 
   return 0;
